@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "description": "Server for Minotá",
   "scripts": {
-    "test": "mocha **/*.test.js --watch",
-    "lint": "node_modules/.bin/eslint ."
+    "test": "node node_modules/mocha/bin/mocha **/*.test.js --watch",
+    "lint": "node node_modules/eslint/bin/eslint ."
   },
   "main": "index.js",
   "repository": "https://github.com/abimbolas/minota-server.git",
