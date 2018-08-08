@@ -1,1 +1,1 @@
-# minota-server
+# Server for Minotá

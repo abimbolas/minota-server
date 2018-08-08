@@ -1,0 +1,37 @@
+{
+  "name": "minota-server",
+  "version": "1.0.0",
+  "description": "Server for Minotá",
+  "scripts": {
+    "test": "mocha **/*.test.js --watch",
+    "lint": "node_modules/.bin/eslint ."
+  },
+  "main": "index.js",
+  "repository": "https://github.com/abimbolas/minota-server.git",
+  "author": "Vitaly Kuleshin <antivitla@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "minota-shared": "*.*",
+    "minota-storage": "*.*"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "mocha": "^5.2.0"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "env": {
+      "node": true,
+      "browser": true
+    }
+  },
+  "eslintIgnore": [
+    "*.test.js"
+  ]
+}
