@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const storage = require('minota-storage');
-const config = require('minota-shared/config');
+const config = require('minota-shared/config').read();
 
 const server = express();
 
