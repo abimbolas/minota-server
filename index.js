@@ -16,7 +16,7 @@ server.use(bodyParser.json());
 server.use(cors());
 
 // Welcome
-server.get('/', (req, res) => res.send('Welcome to Minota server'));
+server.get('/', (req, res) => res.send('Welcome to Minota server v1.2.1'));
 
 // Get notes
 server.get('/last', (req, res) => storage
@@ -42,6 +42,14 @@ server.get('/notes/all', (req, res) => storage
   .get({ notes: 'all' })
   .then(notes => res.send(notes))
   .catch(error => res.status(400).send(error.message)));
+
+server.get('/notes/:id', (req, res) => {
+  return storage
+    .config(config.storage)
+    .get({ id: req.params.id })
+    .then(notes => res.send(notes))
+    .catch(error => res.status(404).send(error.message));
+});
 
 server.get('/notes', (req, res) => {
   const params = {};
