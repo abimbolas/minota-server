@@ -9,7 +9,6 @@ const server = express();
 
 function init (userStorageConfig) {
   storageConfig = userStorageConfig || config.read().storage;
-  console.log(storageConfig);
   return server;
 }
 
