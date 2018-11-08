@@ -9,6 +9,7 @@ const server = express();
 
 function init (userStorageConfig) {
   storageConfig = userStorageConfig || config.read().storage;
+  console.log(storageConfig);
   return server;
 }
 
@@ -45,7 +46,7 @@ server.get('/notes/all', (req, res) => storage
 
 server.get('/notes/:id', (req, res) => {
   return storage
-    .config(config.storage)
+    .config(storageConfig)
     .get({ id: req.params.id })
     .then(notes => res.send(notes))
     .catch(error => res.status(404).send(error.message));
