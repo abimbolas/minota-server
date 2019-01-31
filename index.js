@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style, no-console */
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -5,10 +6,12 @@ const storage = require('minota-storage');
 const config = require('minota-shared/config');
 
 let storageConfig; // will read at init time
+let globalConfig;
 const server = express();
 
-function init (userStorageConfig) {
-  storageConfig = userStorageConfig || config.read().storage;
+function init(userStorageConfig) {
+  globalConfig = config.read();
+  storageConfig = userStorageConfig || globalConfig.storage;
   return server;
 }
 
@@ -17,6 +20,11 @@ server.use(cors());
 
 // Welcome
 server.get('/', (req, res) => res.send('Welcome to Minota server v1.2.1'));
+
+// Get config
+server.get('/config', (req, res) => {
+  res.send(storageConfig);
+});
 
 // Get notes
 server.get('/last', (req, res) => storage
@@ -64,10 +72,37 @@ server.get('/notes', (req, res) => {
 });
 
 // Save notes
-server.post('/content/:id', (req, res) => storage
-  .config(storageConfig)
-  .post({ notes: Array.isArray(req.body) ? req.body : [req.body] })
-  .then(() => res.send([req.body]))
-  .catch(error => res.status(500).send(error.message)));
+server.post('/notes', (req, res) => {
+  return storage
+    .config(storageConfig)
+    .post({ notes: req.body })
+    .then(notes => res.send(notes))
+    .catch(error => res.status(500).send(error.message));
+});
+
+server.post('/notes/:id', (req, res) => {
+  return storage
+    .config(storageConfig)
+    .post({ notes: [req.body] })
+    .then(notes => res.send(notes[0]))
+    .catch(error => res.status(500).send(error.message));
+});
+
+// Delete notes
+server.delete('/notes/:id', (req, res) => {
+  return storage
+    .config(storageConfig)
+    .delete({ id: req.params.id })
+    .then(response => res.send(response))
+    .catch(error => res.status(500).send(error.message));
+});
+
+server.delete('/notes', (req, res) => {
+  return storage
+    .config(storageConfig)
+    .delete({ notes: req.body })
+    .then(response => res.send(response))
+    .catch(error => res.status(500).send(error.message));
+});
 
 module.exports = { init };
