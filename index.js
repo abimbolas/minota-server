@@ -71,21 +71,45 @@ server.get('/notes', (req, res) => {
     .catch(error => res.status(400).send(error.message));
 });
 
-// Save notes
-server.post('/notes', (req, res) => {
-  return storage
-    .config(storageConfig)
-    .post({ notes: req.body })
-    .then(notes => res.send(notes))
-    .catch(error => res.status(500).send(error.message));
-});
 
+// Create notes
 server.post('/notes/:id', (req, res) => {
   return storage
     .config(storageConfig)
     .post({ notes: [req.body] })
-    .then(notes => res.send(notes[0]))
+    .then(notes => res.send(notes))
     .catch(error => res.status(500).send(error.message));
+});
+
+// server.post('/notes', (req, res) => {
+//   return storage
+//     .config(storageConfig)
+//     .post({ notes: req.body })
+//     .then(notes => res.send(notes))
+//     .catch(error => res.status(500).send(error.message));
+// });
+
+
+// Update notes
+// server.put('/notes/:id', (req, res) => {
+//   return storage
+//     .config(storageConfig)
+//     .put({ notes: [req.body] })
+//     .then(notes => res.send(notes[0]))
+//     .catch(error => res.status(500).send(error.message));
+// });
+
+server.put('/notes', (req, res) => {
+  return storage
+    .config(storageConfig)
+    .put({ notes: req.body })
+    .then(notes => res.send(notes))
+    .catch((error) => {
+      if (error.status) {
+        return res.status(error.status).send(error.message);
+      }
+      return res.status(500).send(error.message);
+    });
 });
 
 // Delete notes
@@ -94,15 +118,34 @@ server.delete('/notes/:id', (req, res) => {
     .config(storageConfig)
     .delete({ id: req.params.id })
     .then(response => res.send(response))
-    .catch(error => res.status(500).send(error.message));
+    .catch((error) => {
+      let status = 500;
+      let message = 'Internal server error';
+      if (error.message.test(/^\d\d\d\s+\w+/)) {
+        const match = error.message.match(/^(\d\d\d)\s+(.+)/);
+        [, status, message] = match;
+      }
+      return res.status(status).send(message);
+    });
 });
 
-server.delete('/notes', (req, res) => {
-  return storage
-    .config(storageConfig)
-    .delete({ notes: req.body })
-    .then(response => res.send(response))
-    .catch(error => res.status(500).send(error.message));
-});
+// server.delete('/notes', (req, res) => {
+//   if (!Object.keys(req.body).length) {
+//     return res.status(400).send('Empty notes list');
+//   }
+//   return storage
+//     .config(storageConfig)
+//     .delete({ notes: req.body })
+//     .then(response => res.send(response))
+//     .catch((error) => {
+//       let status = 500;
+//       let message = 'Internal server error';
+//       if (error.message.test(/^\d\d\d\s+\w+/)) {
+//         const match = error.message.match(/^(\d\d\d)\s+(.+)/);
+//         [, status, message] = match;
+//       }
+//       return res.status(status).send(message);
+//     });
+// });
 
 module.exports = { init };
