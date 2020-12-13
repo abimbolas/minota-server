@@ -71,6 +71,12 @@ server.post('/notes', (req, res) => storage
   .then(notes => res.send(notes))
   .catch(commonErrorHandler(res))
 );
+server.delete('/notes', (req, res) => storage
+  .config(prepareConfig(req))
+  .deleteNotes(req.body)
+  .then(commonSuccessHandler(res))
+  .catch(commonErrorHandler(res))
+);
 
 // // Note by id
 // server.get('/notes/:id', (req, res) => storage
